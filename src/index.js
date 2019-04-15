@@ -7,6 +7,8 @@ import App from "./App";
 const GlobalStyle = createGlobalStyle`
     body {
         margin: 0;
+        overflow: hidden;
+        background: black;
         font-family: sans-serif;
     }
 `;
