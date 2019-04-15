@@ -2,6 +2,7 @@ import React, {Fragment} from "react";
 import styled from "styled-components";
 
 import MinecraftMap from "./MinecraftMap";
+import AudioPlayer from "./AudioPlayer";
 
 const Logo = styled.h1`
   color: #777;
@@ -26,6 +27,8 @@ const App = () => {
           thechun.xyz
         </a>
       </Logo>
+
+      <AudioPlayer />
 
       <MinecraftMap />
     </Fragment>
