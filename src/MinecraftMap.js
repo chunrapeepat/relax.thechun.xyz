@@ -40,16 +40,18 @@ const MinecraftMap = () => {
     renderElement.appendChild(renderer.domElement);
 
     // Add Light
-    const light = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
+    var light = new THREE.PointLight(0xffc107, 2, 150);
+    light.position.set(camera.position.x, camera.position.y, camera.position.z);
+    light.castShadow = true;
     scene.add(light);
 
     // Loading Minecraft Map Model
-    mtlLoader.load("/tree.mtl", minecraftModelMaterials => {
-      minecraftModelMaterials.preload();
-      objLoader.setMaterials(minecraftModelMaterials);
+    mtlLoader.load("/tree.mtl", materials => {
+      materials.preload();
+      objLoader.setMaterials(materials);
 
-      objLoader.load("/tree.obj", minecraftModel => {
-        scene.add(minecraftModel);
+      objLoader.load("/tree.obj", model => {
+        scene.add(model);
         renderer.render(scene, camera);
       });
     });
