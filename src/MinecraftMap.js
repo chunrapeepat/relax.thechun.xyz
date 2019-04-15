@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import * as THREE from "three";
 import {MTLLoader, OBJLoader} from "three-obj-mtl-loader";
@@ -11,14 +11,26 @@ const Canvas = styled.div`
 `;
 
 const MinecraftMap = () => {
-  let renderElement = null;
-  let scene, camera, renderer, light;
+  let tick = 1;
+  let renderElement, frameId;
+  let scene, camera, renderer, light, stars;
 
   const objLoader = new OBJLoader();
   const mtlLoader = new MTLLoader();
 
   const render = () => {
     renderer.render(scene, camera);
+  };
+
+  const animate = () => {
+    render();
+    tick += 1;
+    frameId = window.requestAnimationFrame(animate);
+
+    stars.rotation.x -= 0.00005;
+    stars.rotation.y -= 0.00005;
+    stars.rotation.z -= 0.00005;
+    light.intensity = 2 + Math.sin(tick / 50) / 10;
   };
 
   useEffect(() => {
@@ -31,7 +43,7 @@ const MinecraftMap = () => {
     // Create new camera
     camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
     camera.position.z = 3;
-    camera.position.x = 0.7;
+    camera.position.x = -0.7;
     camera.rotation.x += 0.2;
     camera.zoom = 5;
     camera.updateProjectionMatrix();
@@ -51,9 +63,12 @@ const MinecraftMap = () => {
     scene.add(light);
 
     // Add Star
-    scene.add(createStars(0xffffff));
-    scene.add(createStars(0xffc107));
-    scene.add(createStars(0x18ffff));
+    stars = new THREE.Group();
+    stars.add(createStars(0xffffff));
+    stars.add(createStars(0xffc107));
+    stars.add(createStars(0x18ffff));
+
+    scene.add(stars);
 
     // Loading Minecraft Map Model
     mtlLoader.load("/tree.mtl", materials => {
@@ -66,7 +81,7 @@ const MinecraftMap = () => {
       });
     });
 
-    render();
+    frameId = requestAnimationFrame(animate);
   }, []);
 
   function onMouseMove(e) {
@@ -77,11 +92,11 @@ const MinecraftMap = () => {
     const offsetY = (height - e.clientY) / height;
 
     if (camera) {
-      camera.position.x = offsetX / 50 - 0.7;
-      camera.position.y = offsetY / 50;
+      camera.position.x = offsetX / 100 - 0.7;
+      camera.position.y = offsetY / 100;
 
-      light.position.x = offsetX - 0.7;
-      light.position.y = offsetY;
+      light.position.x = -(offsetX - 0.7);
+      light.position.y = -offsetY;
 
       render();
     }
