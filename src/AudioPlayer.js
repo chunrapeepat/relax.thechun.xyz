@@ -1,5 +1,6 @@
 import React, {Fragment, useState} from "react";
 import styled, {keyframes} from "styled-components";
+import Sound from "react-sound";
 
 const BlinkAnimation = keyframes`
   from {
@@ -29,6 +30,15 @@ function AudioPlayer() {
 
   return (
     <Fragment>
+      {!isSpace && (
+        <Sound
+          loop
+          url="/earth-sound.mp3"
+          volume={100}
+          playStatus={Sound.status.PLAYING}
+        />
+      )}
+
       <TabHere
         onClick={() => {
           setSpace(!isSpace);
