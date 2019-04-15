@@ -12,10 +12,14 @@ const Canvas = styled.div`
 
 const MinecraftMap = () => {
   let renderElement = null;
-  let scene, camera, renderer;
+  let scene, camera, renderer, light;
 
   const objLoader = new OBJLoader();
   const mtlLoader = new MTLLoader();
+
+  const render = () => {
+    renderer.render(scene, camera);
+  };
 
   useEffect(() => {
     const width = renderElement.clientWidth;
@@ -27,7 +31,7 @@ const MinecraftMap = () => {
     // Create new camera
     camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
     camera.position.z = 3;
-    camera.position.x -= 0.7;
+    camera.position.x = 0.7;
     camera.rotation.x += 0.2;
     camera.zoom = 5;
     camera.updateProjectionMatrix();
@@ -41,7 +45,7 @@ const MinecraftMap = () => {
     renderElement.appendChild(renderer.domElement);
 
     // Add Light
-    var light = new THREE.PointLight(0xffc107, 2, 150);
+    light = new THREE.PointLight(0xffc107, 2, 150);
     light.position.set(camera.position.x, camera.position.y, camera.position.z);
     light.castShadow = true;
     scene.add(light);
@@ -62,11 +66,30 @@ const MinecraftMap = () => {
       });
     });
 
-    // Render the scene
-    renderer.render(scene, camera);
+    render();
   }, []);
 
-  return <Canvas ref={mount => (renderElement = mount)} />;
+  function onMouseMove(e) {
+    const width = renderElement.clientWidth / 2;
+    const height = renderElement.clientHeight / 2;
+
+    const offsetX = (e.clientX - width) / width;
+    const offsetY = (height - e.clientY) / height;
+
+    if (camera) {
+      camera.position.x = offsetX / 50 - 0.7;
+      camera.position.y = offsetY / 50;
+
+      light.position.x = offsetX - 0.7;
+      light.position.y = offsetY;
+
+      render();
+    }
+  }
+
+  return (
+    <Canvas onMouseMove={onMouseMove} ref={mount => (renderElement = mount)} />
+  );
 };
 
 export default MinecraftMap;
