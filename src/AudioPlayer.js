@@ -39,6 +39,15 @@ function AudioPlayer() {
         />
       )}
 
+      {isSpace && (
+        <Sound
+          loop
+          url="/space-sound.mp3"
+          volume={100}
+          playStatus={Sound.status.PLAYING}
+        />
+      )}
+
       <TabHere
         onClick={() => {
           setSpace(!isSpace);
