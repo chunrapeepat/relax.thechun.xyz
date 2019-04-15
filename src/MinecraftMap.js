@@ -33,7 +33,7 @@ const MinecraftMap = () => {
 
     light.intensity = 2 + Math.sin(tick / 20) / 10;
 
-    if (tick % 100 >= 0 && tick % 100 <= 10) {
+    if (tick % 300 >= 0 && tick % 300 <= 10) {
       light.intensity = 2 + Math.sin(tick) / 10;
     }
   };
