@@ -1,8 +1,34 @@
-import React from "react";
+import React, {Fragment} from "react";
+import styled from "styled-components";
+
 import MinecraftMap from "./MinecraftMap";
 
+const Logo = styled.h1`
+  color: #777;
+  position: fixed;
+  z-index: 9999;
+  margin: 15px;
+  font-size: 1.4rem;
+  font-family: "Varela", sans-serif;
+
+  & > a {
+    color: #444;
+    text-decoration: none;
+  }
+`;
+
 const App = () => {
-  return <MinecraftMap />;
+  return (
+    <Fragment>
+      <Logo>
+        Relax{" "}
+        <a target="_blank" href="https://thechun.xyz">
+          thechun.xyz
+        </a>
+      </Logo>
+      <MinecraftMap />
+    </Fragment>
+  );
 };
 
 export default App;
