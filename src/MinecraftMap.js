@@ -1,8 +1,8 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import * as THREE from "three";
 
-import modelLoader from "./models/loader";
+import {modelLoader, normalDistribution} from "./models/helper";
 import createStars from "./models/stars";
 
 const Canvas = styled.div`
@@ -10,8 +10,16 @@ const Canvas = styled.div`
   height: 100vh;
 `;
 
+const treeOffset = {x: -0.7, y: 0, z: 3};
+const earthOffset = {x: -600, y: 550, z: -1800};
+
 const MinecraftMap = () => {
+  let offset = treeOffset;
+  let isEarth = false;
+
   let tick = 1;
+  let counter = 1;
+  let isMoving = false;
   let renderElement, frameId;
   let scene, camera, renderer, light, stars, earth;
 
@@ -19,12 +27,40 @@ const MinecraftMap = () => {
     renderer.render(scene, camera);
   };
 
+  const toggleMove = () => {
+    isMoving = true;
+    counter = 1;
+
+    if (isEarth) {
+      offset = treeOffset;
+    } else {
+      offset = earthOffset;
+    }
+  };
+
+  window.toggleMove = toggleMove;
+
   const animate = () => {
     render();
     tick += 1;
     frameId = window.requestAnimationFrame(animate);
 
     if (!stars || !earth) return;
+
+    if (isMoving && counter >= 100) {
+      isMoving = false;
+      return;
+    }
+
+    if (isMoving) {
+      counter++;
+
+      camera.position.x += (earthOffset.x - treeOffset.x) / 100;
+      camera.position.y += (earthOffset.y - treeOffset.y) / 100;
+      camera.position.z += (earthOffset.z - treeOffset.z) / 100;
+
+      return;
+    }
 
     stars.rotation.x -= 0.00005;
     stars.rotation.y -= 0.00005;
@@ -50,8 +86,8 @@ const MinecraftMap = () => {
 
     // Create new camera
     camera = new THREE.PerspectiveCamera(75, width / height, 1, 4000);
-    camera.position.z = 3;
-    camera.position.x = -0.7;
+    camera.position.z = offset.z;
+    camera.position.x = offset.x;
     camera.rotation.x += 0.2;
     camera.zoom = 5;
     camera.updateProjectionMatrix();
@@ -92,8 +128,8 @@ const MinecraftMap = () => {
     scene.add(earthLight);
 
     modelLoader("/earth", earthModel => {
-      earthModel.position.y = 800;
       earthModel.position.x = -600;
+      earthModel.position.y = 800;
       earthModel.position.z = -3000;
       scene.add(earthModel);
 
@@ -110,12 +146,12 @@ const MinecraftMap = () => {
     const offsetX = (e.clientX - width) / width;
     const offsetY = (height - e.clientY) / height;
 
-    if (camera) {
-      camera.position.x = offsetX / 100 - 0.7;
-      camera.position.y = offsetY / 100;
+    if (camera && !isMoving) {
+      camera.position.x = offset.x + offsetX / 100;
+      camera.position.y = offset.y + offsetY / 100;
 
-      light.position.x = -(offsetX - 0.7);
-      light.position.y = -offsetY;
+      light.position.x = -(offsetX + offset.x);
+      light.position.y = -offsetY + offset.y;
 
       render();
     }

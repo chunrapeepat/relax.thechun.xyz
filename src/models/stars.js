@@ -11,7 +11,7 @@ export default color => {
     starsGeometry.vertices.push(star);
   }
 
-  for (let i = 0; i < 30000; i++) {
+  for (let i = 0; i < 100000; i++) {
     const star = new THREE.Vector3();
     star.x = THREE.Math.randFloatSpread(4500);
     star.y = THREE.Math.randFloatSpread(4500);
