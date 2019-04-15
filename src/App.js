@@ -1,7 +1,8 @@
 import React from "react";
+import MinecraftMap from "./MinecraftMap";
 
 const App = () => {
-  return <div>Hello World</div>;
+  return <MinecraftMap />;
 };
 
 export default App;
