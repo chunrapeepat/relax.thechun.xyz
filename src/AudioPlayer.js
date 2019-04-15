@@ -4,7 +4,7 @@ import Sound from "react-sound";
 
 const BlinkAnimation = keyframes`
   from {
-      color: white;
+      color: #555;
   }
   to {
       color: black;
@@ -12,7 +12,7 @@ const BlinkAnimation = keyframes`
 `;
 
 const TabHere = styled.div`
-  color: white;
+  color: #555;
   position: fixed;
   bottom: 15px;
   left: 50vw;
