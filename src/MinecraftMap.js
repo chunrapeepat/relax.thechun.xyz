@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import * as THREE from "three";
-import {MTLLoader, OBJLoader} from "three-obj-mtl-loader";
 
+import modelLoader from "./models/loader";
 import createStars from "./models/stars";
 
 const Canvas = styled.div`
@@ -13,10 +13,7 @@ const Canvas = styled.div`
 const MinecraftMap = () => {
   let tick = 1;
   let renderElement, frameId;
-  let scene, camera, renderer, light, stars;
-
-  const objLoader = new OBJLoader();
-  const mtlLoader = new MTLLoader();
+  let scene, camera, renderer, light, stars, earth;
 
   const render = () => {
     renderer.render(scene, camera);
@@ -27,9 +24,15 @@ const MinecraftMap = () => {
     tick += 1;
     frameId = window.requestAnimationFrame(animate);
 
+    if (!stars || !earth) return;
+
     stars.rotation.x -= 0.00005;
     stars.rotation.y -= 0.00005;
     stars.rotation.z -= 0.00005;
+
+    earth.rotation.x -= 0.001;
+    earth.rotation.y -= 0.001;
+    earth.rotation.z -= 0.001;
 
     light.intensity = 2 + Math.sin(tick / 20) / 10;
 
@@ -46,7 +49,7 @@ const MinecraftMap = () => {
     scene = new THREE.Scene();
 
     // Create new camera
-    camera = new THREE.PerspectiveCamera(75, width / height, 1, 1000);
+    camera = new THREE.PerspectiveCamera(75, width / height, 1, 4000);
     camera.position.z = 3;
     camera.position.x = -0.7;
     camera.rotation.x += 0.2;
@@ -75,15 +78,26 @@ const MinecraftMap = () => {
 
     scene.add(stars);
 
-    // Loading Minecraft Map Model
-    mtlLoader.load("/tree.mtl", materials => {
-      materials.preload();
-      objLoader.setMaterials(materials);
+    // Add Fog
+    scene.fog = new THREE.Fog(0x000000, 1, 5000);
+    scene.background = new THREE.Color(0x000000);
 
-      objLoader.load("/tree.obj", model => {
-        scene.add(model);
-        renderer.render(scene, camera);
-      });
+    // Loading Tree
+    modelLoader("/tree", tree => {
+      scene.add(tree);
+    });
+
+    // Loading Minecraft Earth
+    const earthLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
+    scene.add(earthLight);
+
+    modelLoader("/earth", earthModel => {
+      earthModel.position.y = 800;
+      earthModel.position.x = -600;
+      earthModel.position.z = -3000;
+      scene.add(earthModel);
+
+      earth = earthModel;
     });
 
     frameId = requestAnimationFrame(animate);
