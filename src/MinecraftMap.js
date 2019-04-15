@@ -30,7 +30,12 @@ const MinecraftMap = () => {
     stars.rotation.x -= 0.00005;
     stars.rotation.y -= 0.00005;
     stars.rotation.z -= 0.00005;
-    light.intensity = 2 + Math.sin(tick / 50) / 10;
+
+    light.intensity = 2 + Math.sin(tick / 20) / 10;
+
+    if (tick % 100 >= 0 && tick % 100 <= 10) {
+      light.intensity = 2 + Math.sin(tick) / 10;
+    }
   };
 
   useEffect(() => {
