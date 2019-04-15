@@ -2,7 +2,8 @@ import React, {useEffect} from "react";
 import styled from "styled-components";
 import * as THREE from "three";
 import {MTLLoader, OBJLoader} from "three-obj-mtl-loader";
-import {ColorKeyframeTrack} from "three";
+
+import createStars from "./models/stars";
 
 const Canvas = styled.div`
   width: 100vw;
@@ -44,6 +45,11 @@ const MinecraftMap = () => {
     light.position.set(camera.position.x, camera.position.y, camera.position.z);
     light.castShadow = true;
     scene.add(light);
+
+    // Add Star
+    scene.add(createStars(0xffffff));
+    scene.add(createStars(0xffc107));
+    scene.add(createStars(0x18ffff));
 
     // Loading Minecraft Map Model
     mtlLoader.load("/tree.mtl", materials => {
