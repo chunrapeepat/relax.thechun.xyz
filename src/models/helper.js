@@ -1,7 +1,7 @@
 import {MTLLoader, OBJLoader} from "three-obj-mtl-loader";
 
 export const sigmoid = (x, normal) => {
-  return 1 - 1 / (1 + Math.exp(-((-x / normal) * 12 + 6)));
+  return 1 - 1 / (1 + Math.exp(-((-x / normal) * 24 + 12)));
 };
 
 export const modelLoader = (path, callback) => {

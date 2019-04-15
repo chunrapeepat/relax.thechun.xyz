@@ -47,19 +47,31 @@ const MinecraftMap = () => {
 
     if (!stars || !earth) return;
 
-    if (isMoving && counter >= 100) {
+    if (isMoving && counter >= 200) {
       isMoving = false;
+      isEarth = !isEarth;
       return;
     }
 
     if (isMoving) {
       counter++;
 
-      const percent = sigmoid(counter, 100);
+      const percent = sigmoid(counter, 200);
 
-      camera.position.x = (earthOffset.x - treeOffset.x) * percent;
-      camera.position.y = (earthOffset.y - treeOffset.y) * percent;
-      camera.position.z = (earthOffset.z - treeOffset.z) * percent;
+      if (counter <= 10) console.log(percent);
+
+      if (isEarth) {
+        camera.position.x =
+          earthOffset.x + (treeOffset.x - earthOffset.x) * percent;
+        camera.position.y =
+          earthOffset.y + (treeOffset.y - earthOffset.y) * percent;
+        camera.position.z =
+          earthOffset.z + (treeOffset.z - earthOffset.z) * percent;
+      } else {
+        camera.position.x = (earthOffset.x - treeOffset.x) * percent;
+        camera.position.y = (earthOffset.y - treeOffset.y) * percent;
+        camera.position.z = (earthOffset.z - treeOffset.z) * percent;
+      }
 
       return;
     }
