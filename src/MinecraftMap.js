@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import styled from "styled-components";
 import * as THREE from "three";
 
-import {modelLoader, normalDistribution} from "./models/helper";
+import {modelLoader, normalDistribution, sigmoid} from "./models/helper";
 import createStars from "./models/stars";
 
 const Canvas = styled.div`
@@ -55,9 +55,11 @@ const MinecraftMap = () => {
     if (isMoving) {
       counter++;
 
-      camera.position.x += (earthOffset.x - treeOffset.x) / 100;
-      camera.position.y += (earthOffset.y - treeOffset.y) / 100;
-      camera.position.z += (earthOffset.z - treeOffset.z) / 100;
+      const percent = sigmoid(counter, 100);
+
+      camera.position.x = (earthOffset.x - treeOffset.x) * percent;
+      camera.position.y = (earthOffset.y - treeOffset.y) * percent;
+      camera.position.z = (earthOffset.z - treeOffset.z) * percent;
 
       return;
     }
