@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import styled from "styled-components";
 import * as THREE from "three";
 
-import {modelLoader, normalDistribution, sigmoid} from "./models/helper";
+import {modelLoader, sigmoid} from "./models/helper";
 import createStars from "./models/stars";
 
 const Canvas = styled.div`
