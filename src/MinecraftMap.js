@@ -124,7 +124,9 @@ const MinecraftMap = () => {
     });
 
     // Loading Minecraft Earth
-    const earthLight = new THREE.HemisphereLight(0xffffff, 0xffffff, 1);
+    const earthLight = new THREE.PointLight(0xffc107, 2, 4000);
+    earthLight.position.set(earthOffset.x, earthOffset.y, earthOffset.z);
+    earthLight.castShadow = true;
     scene.add(earthLight);
 
     modelLoader("/earth", earthModel => {
