@@ -22,10 +22,11 @@ const App = () => {
     <Fragment>
       <Logo>
         Relax{" "}
-        <a target="_blank" href="https://thechun.xyz">
+        <a rel="noopener noreferrer" target="_blank" href="https://thechun.xyz">
           thechun.xyz
         </a>
       </Logo>
+
       <MinecraftMap />
     </Fragment>
   );
